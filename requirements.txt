@@ -1,0 +1,6 @@
+langchain
+streamlit
+openai
+python-decouple
+langchain-openai
+langchain-community
