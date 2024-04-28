@@ -1,0 +1,38 @@
+@font-face {
+  font-family: 'Gilroy-Bold';
+  src: local('Gilroy-Bold'), url(./fonts/Gilroy-Bold.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Gilroy-Regular';
+  src: local('Gilroy-Regular'), url(./fonts//Gilroy-Regular.ttf) format('truetype');
+}
+
+
+body, html {
+  font-family: 'Gilroy-Bold', sans-serif;
+  background-color: #f8f8f8;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #151D4C;
+  color: white;
+  font-size: xx-large;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  width: 60%;
+}
+
+.navbar {
+  display: flex;
+  margin-bottom: 2rem;
+}
+
+.logo {
+  width: 20%;
+  padding: 10px;
+  background-color: #151D4C;
+}

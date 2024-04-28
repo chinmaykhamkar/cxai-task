@@ -4,3 +4,5 @@ openai
 python-decouple
 langchain-openai
 langchain-community
+flask
+flask-cors

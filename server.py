@@ -1,13 +1,14 @@
-from flask import Flask, request, jsonify
+import streamlit as st
 from langchain_openai import ChatOpenAI
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 from decouple import config
 from langchain.memory import ConversationBufferWindowMemory
-from flask_cors import CORS
 
-app = Flask(__name__)
-CORS(app)
+def generate_final_response(ai_response):
+    result_dict = eval(f'{{ {ai_response} }}')
+    print(result_dict)
+    return result_dict
 
 prompt = PromptTemplate(
     input_variables=["chat_history", "question"],
@@ -62,6 +63,7 @@ If you don't understand the question, just respond with "intentionRecognised": "
     AI:"""
 )
 
+
 llm = ChatOpenAI(openai_api_key=config("OPENAI_API_KEY"))
 memory = ConversationBufferWindowMemory(memory_key="chat_history", k=4)
 llm_chain = LLMChain(
@@ -70,27 +72,42 @@ llm_chain = LLMChain(
     prompt=prompt
 )
 
-def generate_final_response(ai_response):
-    result_dict = eval(f'{{ {ai_response} }}')
-    print(result_dict)
-    return result_dict
+
+st.set_page_config(
+    page_title="CXApp",
+    page_icon="🤖"
+)
 
 
-@app.route('/chat', methods=['POST'])
-def chat():
-    data = request.get_json()
-    user_prompt = data.get('question')
-    ai_response = llm_chain.predict(question=user_prompt)
-    final_response = generate_final_response(ai_response)
-    print(final_response)
-    return jsonify(final_response)
+st.title("CXApp")
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# check for messages in session and create if not exists
+if "messages" not in st.session_state.keys():
+    st.session_state.messages = [
+        {"role": "assistant", "content": "Hello there, am CXApp assistant. How can I help you?"},
+    ]
 
 
+# Display all messages
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.write(message["content"])
 
 
+user_prompt = st.chat_input()
+
+if user_prompt is not None:
+    st.session_state.messages.append({"role": "user", "content": user_prompt})
+    with st.chat_message("user"):
+        st.write(user_prompt)
 
 
+if st.session_state.messages[-1]["role"] != "assistant":
+    with st.chat_message("assistant"):
+        with st.spinner("Loading..."):
+            ai_response = llm_chain.predict(question=user_prompt)
+            final_response = generate_final_response(ai_response)
+            st.write(final_response)
+    new_ai_message = {"role": "assistant", "content": final_response}
+    st.session_state.messages.append(new_ai_message)
