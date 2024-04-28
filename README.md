@@ -55,3 +55,5 @@ The frontend should be up and running, make sure the backend server is running a
 
 ## Demo video
 
+https://github.com/chinmaykhamkar/cxai-task/assets/37527597/87aaab05-24b6-4a59-bc8e-4507f6130bf1
+
